@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BackEndTea\Architect\Infrastructure\Console;
 
+use BackEndTea\Architect\Infrastructure\Command\RunCommand;
 use Symfony\Component\Console\Application as SymfonyApplication;
 
 class Application extends SymfonyApplication
@@ -13,6 +14,7 @@ class Application extends SymfonyApplication
     {
         return [
             ...parent::getDefaultCommands(),
+            new RunCommand(),
         ];
     }
 }

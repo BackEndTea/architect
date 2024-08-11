@@ -11,5 +11,7 @@ use BackEndTea\Architect\Infrastructure\Console\Application;
         }
     }
 
-    (new Application())->run();
+    $app = new Application();
+    $app->setDefaultCommand('run');
+    $app->run();
 })();
