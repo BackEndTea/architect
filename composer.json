@@ -30,12 +30,16 @@
         "php": "^8.2",
         "symfony/console": "^6.4",
         "symfony/finder": "^6.4",
-        "roave/better-reflection": "^6.41"
+        "roave/better-reflection": "^6.41",
+        "nikic/php-parser": "^5.1"
     },
     "config": {
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "phpstan/extension-installer": true
         }
-    }
+    },
+    "bin": [
+        "bin/architect"
+    ]
 }

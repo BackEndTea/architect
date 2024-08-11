@@ -8,7 +8,7 @@ use Symfony\Component\Finder\Finder;
 
 return ConfigurationBuilder::create()
     ->paths(Finder::create()
-        ->in('src/Domain')
+        ->in('src')
         ->in('tests')
         ->name('*.php')
         ->files())

@@ -4,11 +4,19 @@
 use BackEndTea\Architect\Infrastructure\Console\Application;
 
 (function () {
+    $autoload = null;
     foreach ([__DIR__ . '/../../../autoload.php', __DIR__ . '/../vendor/autoload.php'] as $file) {
         if (file_exists($file)) {
-            require $file;
+            $autoload =  $file;
             break;
         }
+    }
+
+    if($autoload) {
+        require $autoload;
+    } else {
+        echo "Did not find autoloader";
+        return 0;
     }
 
     $app = new Application();

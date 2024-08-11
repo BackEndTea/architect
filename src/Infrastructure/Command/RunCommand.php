@@ -20,6 +20,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use function array_merge;
 use function getcwd;
 use function is_string;
+use function realpath;
 
 #[AsCommand(
     name: 'run',
@@ -81,6 +82,11 @@ class RunCommand extends Command
 
         if (! is_string($path)) {
             throw new InvalidArgumentException('Path should be a string');
+        }
+
+        $path = realpath($path);
+        if (! $path) {
+            throw new InvalidArgumentException('Path should be a valid file');
         }
 
         $config = require $path;
