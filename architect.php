@@ -1,19 +1,34 @@
 <?php
 
-return \BackEndTea\Architect\Domain\Config\ConfigurationBuilder::create()
-    ->paths(\Symfony\Component\Finder\Finder::create()
-        ->in('src')
+use BackEndTea\Architect\Domain\Config\ConfigurationBuilder;
+use BackEndTea\Architect\Domain\Matcher\GlobFile;
+use BackEndTea\Architect\Domain\Matcher\NamespaceRegex;
+use BackEndTea\Architect\Domain\Rule\Rule;
+use Symfony\Component\Finder\Finder;
+
+return ConfigurationBuilder::create()
+    ->paths(Finder::create()
+        ->in('src/Domain')
         ->in('tests')
         ->name('*.php')
         ->files())
     ->addRule(
-        new \BackEndTea\Architect\Domain\Rule\Rule(
-            new \BackEndTea\Architect\Domain\Matcher\NamespaceRegex(
+        new Rule(
+            from: new NamespaceRegex(
                 '#BackEndTea\\\Architect\\\Domain#'
             ),
-            new \BackEndTea\Architect\Domain\Matcher\NamespaceRegex(
+            to: new \BackEndTea\Architect\Domain\Matcher\Any(
+                new NamespaceRegex(
                 '/BackEndTea\\\\Architect\\\\Infrastructure/'
+                ),
+                new NamespaceRegex(
+                    '/BackEndTea\\\\Architect\\\\Application/'
+                )
             )
+        ),
+        new Rule(
+            from: new GlobFile(__DIR__ .'/src/**/*'),
+            to: new GlobFile(__DIR__ . '/tests/**/*')
         )
     )
     ->build();

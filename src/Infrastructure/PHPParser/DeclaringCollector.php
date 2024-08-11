@@ -14,7 +14,12 @@ class DeclaringCollector extends NodeVisitorAbstract
 
     public function enterNode(Node $node): Node|null
     {
-        if (! ($node instanceof Node\Stmt\Interface_) && ! ($node instanceof Node\Stmt\Class_) && ! ($node instanceof Node\Stmt\Trait_)) {
+        if (
+            ! $node instanceof Node\Stmt\Interface_
+            && ! $node instanceof Node\Stmt\Class_
+            && ! $node instanceof Node\Stmt\Trait_
+            && ! $node instanceof Node\Stmt\Enum_
+        ) {
             return null;
         }
 

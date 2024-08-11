@@ -7,21 +7,22 @@ namespace BackEndTea\Architect\Domain\Matcher;
 use BackEndTea\Architect\Domain\Declaration;
 use BackEndTea\Architect\Domain\Matcher;
 
-use function preg_match;
+use function fnmatch;
 
-class NamespaceRegex implements Matcher
+class GlobFile implements Matcher
 {
     public function __construct(
-        private readonly string $regex,
+        private string $path,
     ) {
     }
 
     public function matches(Declaration $file): bool|null
     {
-        if ($file->getNamespace() === null) {
+        $fileName = $file->fileName();
+        if (! $fileName) {
             return null;
         }
 
-        return (bool) preg_match($this->regex, $file->getNamespace());
+        return fnmatch($this->path, $fileName);
     }
 }
