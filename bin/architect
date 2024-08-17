@@ -16,7 +16,7 @@ use BackEndTea\Architect\Infrastructure\Console\Application;
         require $autoload;
     } else {
         echo "Did not find autoloader";
-        return 0;
+        exit(1);
     }
 
     $app = new Application();

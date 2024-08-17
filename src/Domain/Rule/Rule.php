@@ -6,13 +6,14 @@ namespace BackEndTea\Architect\Domain\Rule;
 
 use BackEndTea\Architect\Domain\Declaration;
 use BackEndTea\Architect\Domain\Matcher;
-use BackEndTea\Architect\Domain\Matcher\All;
+use BackEndTea\Architect\Domain\Matcher\Always;
 use BackEndTea\Architect\Domain\Matcher\None;
 use InvalidArgumentException;
 
 class Rule implements \BackEndTea\Architect\Domain\Rule
 {
     public function __construct(
+        private string $name,
         private Matcher|null $from = null,
         private Matcher|null $notFrom = null,
         private Matcher|null $to = null,
@@ -27,13 +28,10 @@ class Rule implements \BackEndTea\Architect\Domain\Rule
         }
     }
 
-    public function isAllowed(Declaration $from, Declaration $to): bool
+    public function isForbidden(Declaration $from, Declaration $to): bool
     {
-        if (! $this->doesMatch($from, $this->from, $this->notFrom)) {
-            return true;
-        }
-
-        return ! $this->doesMatch($to, $this->to, $this->notTo);
+        return $this->doesMatch($from, $this->from, $this->notFrom)
+            && $this->doesMatch($to, $this->to, $this->notTo);
     }
 
     private function doesMatch(
@@ -41,9 +39,14 @@ class Rule implements \BackEndTea\Architect\Domain\Rule
         Matcher|null $matcher,
         Matcher|null $negatedMatcher,
     ): bool {
-        $matcher        ??= new All();
+        $matcher        ??= new Always();
         $negatedMatcher ??=  new None();
 
         return $matcher->matches($declaration) && $negatedMatcher->matches($declaration) === false;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
     }
 }

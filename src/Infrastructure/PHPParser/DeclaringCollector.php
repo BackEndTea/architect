@@ -14,17 +14,22 @@ class DeclaringCollector extends NodeVisitorAbstract
 
     public function enterNode(Node $node): Node|null
     {
+        if ($node instanceof Node\Stmt\Namespace_ && $node->name !== null) {
+            $node->name->setAttribute('isDeclaration', true);
+        }
+
         if (
             ! $node instanceof Node\Stmt\Interface_
             && ! $node instanceof Node\Stmt\Class_
             && ! $node instanceof Node\Stmt\Trait_
             && ! $node instanceof Node\Stmt\Enum_
+            && ! $node instanceof Node\Stmt\Function_
         ) {
             return null;
         }
 
         if ($node->namespacedName instanceof Node\Name) {
-            $this->declarations[] =  $node->namespacedName->toString();
+            $this->declarations[] = $node->namespacedName->toCodeString();
         }
 
         return null;

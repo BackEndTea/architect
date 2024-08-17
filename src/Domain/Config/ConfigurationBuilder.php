@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace BackEndTea\Architect\Domain\Config;
 
+use BackEndTea\Architect\Domain\Printer\ConsolePrinter;
+use BackEndTea\Architect\Domain\Printer\Printer;
 use BackEndTea\Architect\Domain\Rule;
 use InvalidArgumentException;
 use SplFileInfo;
 
 use function array_merge;
+use function is_array;
 
 class ConfigurationBuilder
 {
@@ -16,6 +19,8 @@ class ConfigurationBuilder
     private iterable $paths = [];
     /** @var array<Rule>  */
     private array $rules = [];
+    /** @var array<Printer>  */
+    private array $printers = [];
 
     public static function create(): self
     {
@@ -30,9 +35,29 @@ class ConfigurationBuilder
         return $this;
     }
 
-    public function addRule(Rule ...$rule): static
+    /**
+     * @param Rule|array<Rule> ...$rule
+     *
+     * @return $this
+     */
+    public function addRule(Rule|array ...$rule): static
     {
-        $this->rules = array_merge($this->rules, $rule);
+        foreach ($rule as $r) {
+            if (is_array($r)) {
+                $this->rules = array_merge($this->rules, $r);
+
+                continue;
+            }
+
+            $this->rules[] = $r;
+        }
+
+        return $this;
+    }
+
+    public function addPrinter(Printer ...$printer): static
+    {
+        $this->printers = array_merge($this->printers, $printer);
 
         return $this;
     }
@@ -47,6 +72,10 @@ class ConfigurationBuilder
             throw new InvalidArgumentException('Rules cannot be empty');
         }
 
-        return new Configuration($this->paths, $this->rules);
+        if ($this->printers === []) {
+            $this->printers[] = new ConsolePrinter();
+        }
+
+        return new Configuration($this->paths, $this->rules, $this->printers);
     }
 }

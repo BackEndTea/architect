@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace BackEndTea\Architect\Domain;
 
-use Roave\BetterReflection\Reflection\ReflectionClass;
+use BackEndTea\Architect\Domain\Reflection\Reflector;
 
 class Declaration
 {
     public function __construct(
         private readonly string|null $namespace,
-        private readonly ReflectionClass|null $classReflection,
+        private readonly Reflector|null $reflector,
+        private readonly string $rootDirectory,
     ) {
     }
 
@@ -21,6 +22,16 @@ class Declaration
 
     public function fileName(): string|null
     {
-        return $this->classReflection?->getFileName();
+        return $this->reflector?->getFileName();
+    }
+
+    public function isNativePHP(): bool|null
+    {
+        return $this->reflector?->isNativePHP();
+    }
+
+    public function rootDirectory(): string
+    {
+        return $this->rootDirectory;
     }
 }

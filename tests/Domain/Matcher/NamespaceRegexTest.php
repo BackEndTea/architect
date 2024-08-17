@@ -18,7 +18,7 @@ final class NamespaceRegexTest extends TestCase
     public function testMatches(string $regex, string $namespace): void
     {
         $matcher = new NamespaceRegex($regex);
-        $this->assertTrue($matcher->matches(new Declaration($namespace, null)));
+        $this->assertTrue($matcher->matches(new Declaration($namespace, null, '')));
     }
 
     public static function provideMatchCases(): Generator
@@ -34,7 +34,7 @@ final class NamespaceRegexTest extends TestCase
     {
         $matcher = new NamespaceRegex($regex);
 
-        $this->assertFalse($matcher->matches(new Declaration($namespace, null)));
+        $this->assertFalse($matcher->matches(new Declaration($namespace, null, '')));
     }
 
     public static function provideNotMatchCases(): Generator
@@ -47,6 +47,6 @@ final class NamespaceRegexTest extends TestCase
     {
         $matcher = new NamespaceRegex('/.*/');
 
-        $this->assertNull($matcher->matches(new Declaration(null, null)));
+        $this->assertNull($matcher->matches(new Declaration(null, null, '')));
     }
 }

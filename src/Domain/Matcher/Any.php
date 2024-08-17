@@ -10,7 +10,7 @@ use BackEndTea\Architect\Domain\Matcher;
 class Any implements Matcher
 {
     /** @var array<Matcher> */
-    private array $matchers = [];
+    private readonly array $matchers;
 
     public function __construct(
         Matcher ...$matchers,

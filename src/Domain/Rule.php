@@ -6,5 +6,7 @@ namespace BackEndTea\Architect\Domain;
 
 interface Rule
 {
-    public function isAllowed(Declaration $from, Declaration $to): bool;
+    public function isForbidden(Declaration $from, Declaration $to): bool;
+
+    public function getName(): string;
 }
