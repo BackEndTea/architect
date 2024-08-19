@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BackEndTea\Architect\Domain\Rule;
 
+use BackEndTea\Architect\Domain\Matcher;
 use BackEndTea\Architect\Domain\Matcher\Any;
 use BackEndTea\Architect\Domain\Matcher\GlobFile;
 use BackEndTea\Architect\Domain\Matcher\NamespaceRegex;
@@ -54,15 +55,32 @@ class RuleFactory
         ];
     }
 
-    public static function onlySelfAndNative(string $namespacePart): \BackEndTea\Architect\Domain\Rule
-    {
+    public static function onlySelfAndNative(
+        string $namespacePart,
+        Matcher ...$additionalAllowedMatchers,
+    ): \BackEndTea\Architect\Domain\Rule {
         return new Rule(
             'only self and native',
             from: new NamespaceRegex(sprintf('#\\\\%s\\\\#', $namespacePart)),
             notTo: new Any(
                 new NamespaceRegex(sprintf('#\\\\%s\\\\#', $namespacePart)),
                 new NativePHP(),
+                ...$additionalAllowedMatchers,
             ),
+        );
+    }
+
+    /**
+     * This namespace can have dependencies on other namespaces, but can not be depended on.
+     * Usefull if you have a `Leagcy` namespace, where newer code can't use the Legacy classes, but Legacy classes
+     * can use the newer code.
+     */
+    public static function onlyOutward(string $namespacePart): \BackEndTea\Architect\Domain\Rule
+    {
+        return new Rule(
+            'only outward',
+            notFrom: new NamespaceRegex(sprintf('#\\\\%s\\\\#', $namespacePart)),
+            to: new NamespaceRegex(sprintf('#\\\\%s\\\\#', $namespacePart)),
         );
     }
 }

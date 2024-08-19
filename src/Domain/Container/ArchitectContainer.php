@@ -11,7 +11,7 @@ use function array_key_exists;
 use function get_debug_type;
 use function sprintf;
 
-class ArchitecContainer implements ArchitectGetContainer, SetContainer
+class ArchitectContainer implements ArchitectGetContainer, SetContainer
 {
     /** @var array<class-string, object> */
     private array $dependencies = [];
