@@ -6,7 +6,7 @@ namespace BackEndTea\Architect\Infrastructure\Command;
 
 use BackEndTea\Architect\Domain\Config\Configuration;
 use BackEndTea\Architect\Domain\Config\ConfigurationBuilder;
-use BackEndTea\Architect\Domain\Container\ArchitecContainer;
+use BackEndTea\Architect\Domain\Container\ArchitectContainer;
 use BackEndTea\Architect\Infrastructure\Runner;
 use InvalidArgumentException;
 use Roave\BetterReflection\BetterReflection;
@@ -22,6 +22,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 use function array_merge;
 use function count;
+use function file_exists;
 use function get_debug_type;
 use function getcwd;
 use function is_string;
@@ -59,7 +60,7 @@ class RunCommand extends Command
         $errors = [];
         $hasRan = false;
 
-        $container = new ArchitecContainer();
+        $container = new ArchitectContainer();
         $container->set(SymfonyStyle::class, $io);
         $container->set(Filesystem::class, new Filesystem());
 
@@ -105,9 +106,9 @@ class RunCommand extends Command
 
         if ($path === null) {
             $path = getcwd() . '/architect.php';
-            if(! file_exists($path)) {
+            if (! file_exists($path)) {
                 throw new InvalidArgumentException(
-                    'Expecting a file called architect.php to start.'
+                    'Expecting a file called architect.php to start.',
                 );
             }
         }
